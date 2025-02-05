@@ -1,0 +1,24 @@
+spring.application.name: api-gateway
+server.port: ${SERVER_PORT:8080}
+
+spring:
+  config:
+    import:
+      - optional:file:.env[.properties]
+      - optional:file:./gateway/.env[.properties]
+
+  cloud:
+    gateway:
+      routes:
+        - id: auth-api
+          uri: ${AUTH_API_URI:http://localhost:8081}
+          predicates:
+            - Path=/auth/**
+          filters:
+            - StripPrefix=1
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
